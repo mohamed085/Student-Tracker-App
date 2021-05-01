@@ -2,7 +2,7 @@
 <html>
 
     <head>
-        <title>Add Student</title>
+        <title>Update Student</title>
 
     <style>
             html, body{
@@ -119,25 +119,26 @@
         <div id="container">
             <h3>Add Student</h3>
 
-            <form action="StudentControllerServlet" method="GET">
+            <form action="StudentControllerServlet" method="PSOT">
 
-                <input type="hidden" name="command" value="ADD" />
+                <input type="hidden" name="command" value="UPDATE" />
+                <input type="hidden" name="studentId" value="${Student.id}" />
 
                 <table>
                     <tbody>
                         <tr>
                             <td><label>First name:</label></td>
-                            <td><input type="text" name="firstName" /></td>
+                            <td><input type="text" name="firstName" value="${Student.firstName}"/></td>
                         </tr>
 
                         <tr>
                             <td><label>Last name:</label></td>
-                            <td><input type="text" name="lastName" /></td>
+                            <td><input type="text" name="lastName"value="${Student.lastName}" /></td>
                         </tr>
 
                         <tr>
                             <td><label>Email:</label></td>
-                            <td><input type="text" name="email" /></td>
+                            <td><input type="text" name="email" value="${Student.email}"/></td>
                         </tr>
 
                         <tr>

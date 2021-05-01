@@ -44,7 +44,13 @@ public class StudentController extends HttpServlet {
                     addStudent(request, response);
                     break;
                 case "LOAD":
+                    loadStudent(request, response);
+                    break;
+                case "UPDATE":
                     updateStudent(request, response);
+                    break;
+                case "DELETE":
+                    deleteStudent(request, response);
                     break;
                 default:
                     studentList(request, response);
@@ -71,16 +77,31 @@ public class StudentController extends HttpServlet {
             throws ServletException, IOException {
         Student student = new Student(request.getParameter("firstName"), request.getParameter("lastName"), request.getParameter("email"));
         studentDAO.insertStudent(student);
-        studentList(request, response);
+        studentList(request, response);   
     }
     
-    private void updateStudent(HttpServletRequest request, HttpServletResponse response)
+    private void loadStudent(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        System.out.println("asd");
         String studentId = request.getParameter("studentId");
         Student s = studentDAO.getStudent(studentId);
         request.setAttribute("Student", s); 
         RequestDispatcher dispatcher = request.getRequestDispatcher("/update-student.jsp");
-        dispatcher.forward(request, response); 
+        dispatcher.forward(request, response);
+    }
+    
+    private void updateStudent(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+        int studentId = Integer.parseInt(request.getParameter("studentId"));
+        Student newStudent = new Student(studentId, request.getParameter("firstName"), request.getParameter("lastName"), request.getParameter("email"));
+        studentDAO.updateStudent(newStudent); 
+        studentList(request, response);
+    }
+    private void deleteStudent(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+        int studentId = Integer.parseInt(request.getParameter("studentId"));
+        studentDAO.deleteStudent(studentId); 
+        studentList(request, response);
 
     }
 }

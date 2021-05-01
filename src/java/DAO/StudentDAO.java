@@ -33,7 +33,7 @@ public class StudentDAO {
         }
     }
     
-    public List<Student> gitAllStudent() {
+    public List<Student> getAllStudent() {
         List<Student> students = new ArrayList<>();
         Student student;
         PreparedStatement pre;
@@ -43,7 +43,7 @@ public class StudentDAO {
             pre = connection.prepareStatement("select * FROM student ");
             rst = (ResultSet) pre.executeQuery();
             while(rst.next()){
-                student = new Student(rst.getString(2), rst.getString(3), rst.getString(4));
+                student = new Student(rst.getInt(1), rst.getString(2), rst.getString(3), rst.getString(4));
                 students.add(student);
             }
             return students;
@@ -53,7 +53,7 @@ public class StudentDAO {
         }
     }
     
-    public Student gitStudent(String studentId) {
+    public Student getStudent(String studentId) {
         int id;
         Student student = null;
         PreparedStatement pre;
@@ -65,7 +65,7 @@ public class StudentDAO {
             pre.setInt(1, id);
             rst = (ResultSet) pre.executeQuery();
             while(rst.next()){
-                student = new Student(rst.getString(2), rst.getString(3), rst.getString(4));
+                student = new Student(rst.getInt(1), rst.getString(2), rst.getString(3), rst.getString(4));
             }
             return student;
         } catch (SQLException ex) {
@@ -76,20 +76,31 @@ public class StudentDAO {
     
     
     
-    public void updateStudent(String studentId, Student newStudent) {
-        int id;
+    public void updateStudent(Student newStudent) {
         PreparedStatement pre;
         Connection connection = DBConnection.getConnection();
         try {
-            id = Integer.parseInt(studentId);
-            pre = connection.prepareStatement("update student SET first_name=?, last_name=?, email=? WHERE id=?");
+            System.out.println("SAdas");
+            pre = connection.prepareStatement("UPDATE student SET first_name=?, last_name=?, email=? WHERE id=?");
             pre.setString(1, newStudent.getFirstName());
             pre.setString(2, newStudent.getLastName());
             pre.setString(3, newStudent.getEmail());
-            pre.setInt(4, id);
+            pre.setInt(4, newStudent.getId());
             pre.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
+    
+    public void deleteStudent(int id) {
+        PreparedStatement pre;
+        Connection connection = DBConnection.getConnection();
+        try {
+            pre = connection.prepareStatement("DELETE FROM student WHERE id=?");
+            pre.setInt(1, id);
+            pre.executeUpdate();
+        } catch(SQLException ex){
+            ex.printStackTrace();
+        }
+}
 }

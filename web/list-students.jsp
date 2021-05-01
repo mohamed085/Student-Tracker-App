@@ -89,15 +89,27 @@
                             <th>Action</th>
                         </tr>
                         <c:forEach var="tempStudent" items="${Students}">
-                            <c:url var="templink" value="StudentController">
-                                <c:param name="command" value="LOAD"></c:param>
-                                <c:param name="studentID" value="${tempStudent.id}"></c:param>
+                            <c:url var="updateLink" value="StudentController">
+                                <c:param name="command" value="LOAD" />
+                                <c:param name="studentId" value="${tempStudent.id}" />
+                            </c:url>
+                            
+                            <c:url var="deleteLink" value="StudentController">
+                                <c:param name="command" value="DELETE" />
+                                <c:param name="studentId" value="${tempStudent.id}" />
                             </c:url>
                             <tr>
                                 <td> ${tempStudent.firstName} </td>
                                 <td> ${tempStudent.lastName} </td>
                                 <td> ${tempStudent.email} </td>
-                                <td> <a href="${templink}">Update</a> </td>
+                                <td>
+                                    <a href="${updateLink}">Update</a> 
+                                    <a
+                                        href="${deleteLink}"
+                                        onclick="if (!(confirm('Are you surewant to delete this student?'))) return false"
+                                        >Delete
+                                    </a> 
+                                </td>
                             </tr>
                         </c:forEach>
                     </table>
