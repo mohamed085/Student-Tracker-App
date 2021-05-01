@@ -31,7 +31,27 @@ public class StudentController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        studentList(request, response);
+        try {
+            String theCommand = request.getParameter("command");
+            if (theCommand == null){
+                theCommand = "LIST";
+            }
+            switch (theCommand) {
+                case "LIST":
+                    studentList(request, response);
+                    break;
+                case "ADD":
+                    addStudent(request, response);
+                    break;
+                case "LOAD":
+                    updateStudent(request, response);
+                    break;
+                default:
+                    studentList(request, response);
+            }
+        } catch (Exception e) {
+        }
+
     }
 
     @Override
@@ -41,9 +61,26 @@ public class StudentController extends HttpServlet {
 
     private void studentList(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Student> students = studentDAO.gitAllStudent();
+        List<Student> students = studentDAO.getAllStudent();
         request.setAttribute("Students", students);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/list-students.jsp");
         dispatcher.forward(request, response);
+    }
+    
+    private void addStudent(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        Student student = new Student(request.getParameter("firstName"), request.getParameter("lastName"), request.getParameter("email"));
+        studentDAO.insertStudent(student);
+        studentList(request, response);
+    }
+    
+    private void updateStudent(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String studentId = request.getParameter("studentId");
+        Student s = studentDAO.getStudent(studentId);
+        request.setAttribute("Student", s); 
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/update-student.jsp");
+        dispatcher.forward(request, response); 
+
     }
 }

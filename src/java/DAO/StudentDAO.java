@@ -43,13 +43,53 @@ public class StudentDAO {
             pre = connection.prepareStatement("select * FROM student ");
             rst = (ResultSet) pre.executeQuery();
             while(rst.next()){
-                student = new Student(rst.getString(2), rst.getString(3), rst.getString(3));
+                student = new Student(rst.getString(2), rst.getString(3), rst.getString(4));
                 students.add(student);
             }
             return students;
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
+        }
+    }
+    
+    public Student gitStudent(String studentId) {
+        int id;
+        Student student = null;
+        PreparedStatement pre;
+        Connection connection = DBConnection.getConnection();
+        ResultSet rst = null;
+        try {
+            id = Integer.parseInt(studentId);
+            pre = connection.prepareStatement("select * FROM student WHERE id=?");
+            pre.setInt(1, id);
+            rst = (ResultSet) pre.executeQuery();
+            while(rst.next()){
+                student = new Student(rst.getString(2), rst.getString(3), rst.getString(4));
+            }
+            return student;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+    
+    
+    
+    public void updateStudent(String studentId, Student newStudent) {
+        int id;
+        PreparedStatement pre;
+        Connection connection = DBConnection.getConnection();
+        try {
+            id = Integer.parseInt(studentId);
+            pre = connection.prepareStatement("update student SET first_name=?, last_name=?, email=? WHERE id=?");
+            pre.setString(1, newStudent.getFirstName());
+            pre.setString(2, newStudent.getLastName());
+            pre.setString(3, newStudent.getEmail());
+            pre.setInt(4, id);
+            pre.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
     }
 }
